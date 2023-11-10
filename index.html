@@ -14,7 +14,8 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name (Username)</th>
+                    <th>Name</th>
+                     <th>Username</th>
                     <th>Email</th>
                     <th>Action</th>
                 </tr>
@@ -67,6 +68,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
     <script>
 
+        function deleteAlert() {
+            alert("I am from delete alert");
+        }
+        
         function editPage() {
             alert("I am from edit function")
         }
@@ -81,11 +86,12 @@
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td>${user.id}</td>
-                        <td>${user.name} (${user.username})</td>
+                        <td>${user.name}</td>
+                        <td>(${user.username})</td>
                         <td>${user.email}</td>
                         <td>
                             <button class="btn btn-info btn-sm" data-userid="${user.id}" onclick="editPage()">Edit</button>
-                            <button class="btn btn-danger btn-sm" data-userid="${user.id}" onclick="deleteUser(this)">Delete</button>
+                            <button class="btn btn-danger btn-sm" data-userid="${user.id}" onclick="deleteAlert()">Delete</button>
                         </td>
                     `;
                     userList.appendChild(row);
