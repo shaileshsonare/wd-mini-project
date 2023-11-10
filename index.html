@@ -62,74 +62,82 @@
         </div>
     </div>
 
-    <script src="https://jsonplaceholder.typicode.com/users"></script>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
     <script>
-        // Function to populate the user table
-        function populateUserTable(users) {
+        document.addEventListener("DOMContentLoaded", function() {
             const userList = document.getElementById("user-list");
-            userList.innerHTML = "";
-            users.forEach(user => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>${user.name}</td>
-                    <td>${user.username}</td>
-                    <td>${user.email}</td>
-                    <td>
-                        <button class="btn btn-info btn-sm edit-user" data-userid="${user.id}">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-user" data-userid="${user.id}">Delete</button>
-                    </td>
-                `;
-                userList.appendChild(row);
-            });
-        }
-        
-        // Fetch user data from JSONPlaceholder API
-        $.get("https://jsonplaceholder.typicode.com/users", function(users) {
-            populateUserTable(users);
-        });
-        
-        // Edit user modal functionality
-        $("#user-list").on("click", ".edit-user", function() {
-            const userId = $(this).data("userid");
-            const user = users.find(u => u.id === userId);
-            if (user) {
-                $("#editUserId").val(userId);
-                $("#editName").val(user.name);
-                $("#editUsername").val(user.username);
-                $("#editEmail").val(user.email);
-                $("#editUserModal").modal("show");
-            }
-        });
-        
-        $("#saveUserChanges").click(function() {
-            const userId = $("#editUserId").val();
-            const editedUser = {
-                name: $("#editName").val(),
-                username: $("#editUsername").val(),
-                email: $("#editEmail").val(),
-            };
-        
-            // Update the user in the table (you may want to update the API as well)
-            const userRow = $(`tr:has(button.edit-user[data-userid="${userId}"])`);
-            userRow.find("td:nth-child(2)").text(editedUser.name);
-            userRow.find("td:nth-child(3)").text(editedUser.username);
-            userRow.find("td:nth-child(4)").text(editedUser.email);
-        
-            $("#editUserModal").modal("hide");
-        });
-        
-        // Delete user functionality
-        $("#user-list").on("click", ".delete-user", function() {
-            const userId = $(this).data("userid");
-            if (confirm("Are you sure you want to delete this user?")) {
-                // Remove the user from the table (you may want to delete from the API as well)
-                const userRow = $(`tr:has(button.delete-user[data-userid="${userId}"])`);
-                userRow.remove();
-            }
-        });
 
+            // Function to populate the user table
+            function populateUserTable(users) {
+                userList.innerHTML = "";
+                users.forEach(user => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>
+                            <button class="btn btn-info btn-sm edit-user" data-userid="${user.id}">Edit</button>
+                            <button class="btn btn-danger btn-sm delete-user" data-userid="${user.id}">Delete</button>
+                        </td>
+                    `;
+                    userList.appendChild(row);
+                });
+            }
+
+            // Fetch user data from JSONPlaceholder API
+            fetch("https://jsonplaceholder.typicode.com/users")
+                .then(response => response.json())
+                .then(users => {
+                    populateUserTable(users);
+                })
+                .catch(error => console.error(error));
+
+            // Edit user modal functionality
+            userList.addEventListener("click", function(e) {
+                if (e.target.classList.contains("edit-user")) {
+                    const userId = e.target.getAttribute("data-userid");
+                    const user = users.find(u => u.id === parseInt(userId));
+                    if (user) {
+                        document.getElementById("editUserId").value = user.id;
+                        document.getElementById("editName").value = user.name;
+                        document.getElementById("editUsername").value = user.username;
+                        document.getElementById("editEmail").value = user.email;
+                        document.getElementById("editUserModal").classList.add("show");
+                    }
+                }
+            });
+
+            document.getElementById("saveUserChanges").addEventListener("click", function() {
+                const userId = parseInt(document.getElementById("editUserId").value);
+                const editedUser = {
+                    name: document.getElementById("editName").value,
+                    username: document.getElementById("editUsername").value,
+                    email: document.getElementById("editEmail").value,
+                };
+
+                // Update the user in the table (you may want to update the API as well)
+                const userRow = userList.querySelector(`tr:has(button.edit-user[data-userid="${userId}"])`);
+                userRow.querySelector("td:nth-child(2)").textContent = editedUser.name;
+                userRow.querySelector("td:nth-child(3)").textContent = editedUser.username;
+                userRow.querySelector("td:nth-child(4)").textContent = editedUser.email;
+
+                document.getElementById("editUserModal").classList.remove("show");
+            });
+
+            // Delete user functionality
+            userList.addEventListener("click", function(e) {
+                if (e.target.classList.contains("delete-user")) {
+                    const userId = e.target.getAttribute("data-userid");
+                    if (confirm("Are you sure you want to delete this user?")) {
+                        // Remove the user from the table (you may want to delete from the API as well)
+                        const userRow = userList.querySelector(`tr:has(button.delete-user[data-userid="${userId}"])`);
+                        userRow.remove();
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
