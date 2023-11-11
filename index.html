@@ -14,7 +14,8 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name (Username)</th>
+                    <th>Name</th>
+                    <th>Username</th>
                     <th>Email</th>
                     <th>Action</th>
                 </tr>
@@ -85,7 +86,8 @@
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td>${user.id}</td>
-                        <td>${user.name} (${user.username})</td>
+                        <td>${user.name}</td>
+                        <td>${user.username}</td>
                         <td>${user.email}</td>
                         <td>
                             <button class="btn btn-info btn-sm" data-userid="${user.id}" onclick="editPage()">Edit</button>
